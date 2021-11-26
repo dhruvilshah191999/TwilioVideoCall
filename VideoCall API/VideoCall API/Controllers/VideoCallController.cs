@@ -13,20 +13,23 @@ using Twilio.Base;
 using System.Net;
 using System.Text;
 using VideoCall_API.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace VideoCall_API.Controllers
 {
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class VideoCallController : ControllerBase
     {
-        /*private readonly ILogger<VideoCallController> _logger;
+        private readonly ILogger<VideoCallController> _logger;
+        private readonly IConfiguration _config;
 
-        public VideoCallController(ILogger<VideoCallController> logger)
+        public VideoCallController(ILogger<VideoCallController> logger, IConfiguration config)
         {
             _logger = logger;
-        }*/
-
+            _config = config;
+        }
+        
         /// <summary>
         /// Generate token for user
         /// </summary>
@@ -38,11 +41,11 @@ namespace VideoCall_API.Controllers
         {
             try
             {
-                string twilioAccountSid = "ACc1055825146dc02b82b4329d0bf76ddb";
-                string authToken = "f32f106654bb5f249fb1df9863cdff18";
-                string twilioApiKey = "SK461fedaf3288aeb25af759bb7bfbe67f";
-                string twilioApiSecret = "7E6hjeT1vNpJnD6PqolvbaFDrflOqc3P";
-                string serviceSid = "ISa1c82e06d2074760adf8ec6c723075ed";
+                string twilioAccountSid = _config.GetValue<string>("TwilioAPISetting:twilioAccountSid");
+                string authToken = _config.GetValue<string>("TwilioAPISetting:authToken");
+                string twilioApiKey = _config.GetValue<string>("TwilioAPISetting:twilioApiKey");
+                string twilioApiSecret = _config.GetValue<string>("TwilioAPISetting:twilioApiSecret");
+                string serviceSid = _config.GetValue<string>("TwilioAPISetting:serviceSid");
 
                 TwilioClient.Init(twilioAccountSid, authToken);
 
@@ -137,8 +140,8 @@ namespace VideoCall_API.Controllers
         {
             try
             {
-                string twilioAccountSid = "ACc1055825146dc02b82b4329d0bf76ddb";
-                string authToken = "f32f106654bb5f249fb1df9863cdff18";
+                string twilioAccountSid = _config.GetValue<string>("TwilioAPISetting:twilioAccountSid");
+                string authToken = _config.GetValue<string>("TwilioAPISetting:authToken");
                 TwilioClient.Init(twilioAccountSid, authToken);
                 if (isRecording)
                 {
@@ -181,8 +184,8 @@ namespace VideoCall_API.Controllers
         {
             try
             {
-                string twilioAccountSid = "ACc1055825146dc02b82b4329d0bf76ddb";
-                string authToken = "f32f106654bb5f249fb1df9863cdff18";
+                string twilioAccountSid = _config.GetValue<string>("TwilioAPISetting:twilioAccountSid");
+                string authToken = _config.GetValue<string>("TwilioAPISetting:authToken");
 
                 TwilioClient.Init(twilioAccountSid, authToken);
                 List<VideoRecordingModel> recordings = new List<VideoRecordingModel>();
@@ -223,10 +226,10 @@ namespace VideoCall_API.Controllers
         {
             try
             {
-                string twilioApiKey = "SK461fedaf3288aeb25af759bb7bfbe67f";
-                string twilioApiSecret = "7E6hjeT1vNpJnD6PqolvbaFDrflOqc3P";
-                string twilioAccountSid = "ACc1055825146dc02b82b4329d0bf76ddb";
-                string authToken = "f32f106654bb5f249fb1df9863cdff18";
+                string twilioApiKey = _config.GetValue<string>("TwilioAPISetting:twilioApiKey");
+                string twilioApiSecret = _config.GetValue<string>("TwilioAPISetting:twilioApiSecret");
+                string twilioAccountSid = _config.GetValue<string>("TwilioAPISetting:twilioAccountSid");
+                string authToken = _config.GetValue<string>("TwilioAPISetting:authToken");
 
                 TwilioClient.Init(twilioAccountSid, authToken);
                 string uri = $"https://video.twilio.com/v1/Recordings/{recordingSid}/Media";
@@ -257,8 +260,8 @@ namespace VideoCall_API.Controllers
         {
             try
             {
-                string twilioAccountSid = "ACc1055825146dc02b82b4329d0bf76ddb";
-                string authToken = "f32f106654bb5f249fb1df9863cdff18";
+                string twilioAccountSid = _config.GetValue<string>("TwilioAPISetting:twilioAccountSid");
+                string authToken = _config.GetValue<string>("TwilioAPISetting:authToken");
                 TwilioClient.Init(twilioAccountSid, authToken);
                 ResourceSet<ParticipantResource> participants = ParticipantResource.Read(
                    roomId,
@@ -283,8 +286,8 @@ namespace VideoCall_API.Controllers
         {
             try
             {
-                string twilioAccountSid = "ACc1055825146dc02b82b4329d0bf76ddb";
-                string authToken = "f32f106654bb5f249fb1df9863cdff18";
+                string twilioAccountSid = _config.GetValue<string>("TwilioAPISetting:twilioAccountSid");
+                string authToken = _config.GetValue<string>("TwilioAPISetting:authToken");
                 TwilioClient.Init(twilioAccountSid, authToken);
                 ParticipantResource participant = ParticipantResource.Update(
                         roomId,
