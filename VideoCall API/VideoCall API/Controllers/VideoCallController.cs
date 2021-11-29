@@ -49,6 +49,11 @@ namespace VideoCall_API.Controllers
 
                 TwilioClient.Init(twilioAccountSid, authToken);
 
+                /*
+                 * First using group name we search room with same name exists or not.
+                 * if not exists then we create one room with group name
+                 */
+
                 Twilio.Rest.Video.V1.RoomResource room;
                 try
                 {
@@ -69,6 +74,11 @@ namespace VideoCall_API.Controllers
 
                 Twilio.Rest.Conversations.V1.Service.ConversationResource conversation;
 
+                /*
+                 * After that we check in room that we have conversation service available or not using service key
+                 * and room id. 
+                 * If conversation service not available in room then we add in room.
+                */
                 try
                 {
                     conversation = Twilio.Rest.Conversations.V1.Service.ConversationResource.Fetch(
@@ -92,6 +102,10 @@ namespace VideoCall_API.Controllers
 
                 }
 
+                /*
+                 * After that we add participant in conversation using service key,conversation key and user name
+                */
+
                 try
                 {
                     var participant = Twilio.Rest.Conversations.V1.Service.Conversation.ParticipantResource.Create(
@@ -105,6 +119,11 @@ namespace VideoCall_API.Controllers
 
                 }
 
+                /*
+                 * Here we create one access token to join video call.
+                 * We have add grant that which service we want to use. 
+                 * Ex we add video and chat grant.
+                */
 
                 var video = new VideoGrant();
                 video.Room = groupName;
@@ -135,6 +154,12 @@ namespace VideoCall_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Start and stop recording using roomId
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="isRecording"></param>
+        /// <returns></returns>
         [HttpGet]
         public object RecordingVideo(string roomId, bool isRecording)
         {
@@ -145,10 +170,10 @@ namespace VideoCall_API.Controllers
                 TwilioClient.Init(twilioAccountSid, authToken);
                 if (isRecording)
                 {
+                    ///For stop recording
                     var recordingRules = RecordingRulesResource.Update(
                         rules: new List<RecordingRule>(){
                             new RecordingRule(Twilio.Types.RecordingRule.TypeEnum.Exclude, true, null, null, null),
-                              //new RecordingRule(Twilio.Types.RecordingRule.TypeEnum.Exclude, true, null, null, Twilio.Types.RecordingRule.KindEnum.Audio)
                         },
                         pathRoomSid: roomId
                     );
@@ -157,10 +182,10 @@ namespace VideoCall_API.Controllers
                 }
                 else
                 {
+                    ///For start recording
                     var recordingRules = RecordingRulesResource.Update(
                         rules: new List<RecordingRule>(){
                             new RecordingRule(Twilio.Types.RecordingRule.TypeEnum.Include, true, null, null, null),
-                            //new RecordingRule(Twilio.Types.RecordingRule.TypeEnum.Include, true, null, null, Twilio.Types.RecordingRule.KindEnum.Audio)
                         },
                         pathRoomSid: roomId
                     );
@@ -175,7 +200,7 @@ namespace VideoCall_API.Controllers
         }
 
         /// <summary>
-        /// get video recording list
+        /// get video recording list roomSid
         /// </summary>
         /// <param name="roomSid"></param>
         /// <returns></returns>
@@ -216,7 +241,7 @@ namespace VideoCall_API.Controllers
         }
 
         /// <summary>
-        /// Download video recording
+        /// Download video recording using recordingSid
         /// </summary>
         /// <param name="recordingSid"></param>
         /// <param name="type"></param>
@@ -251,7 +276,7 @@ namespace VideoCall_API.Controllers
         }
 
         /// <summary>
-        /// Get Video room participant list 
+        /// Get room participant list using roomId
         /// </summary>
         /// <param name="roomId"></param>
         /// <returns></returns>
@@ -276,7 +301,7 @@ namespace VideoCall_API.Controllers
         }
 
         /// <summary>
-        /// Remove participant
+        /// Remove participant for room using roomId and participantId
         /// </summary>
         /// <param name="roomId"></param>
         /// <param name="participantId"></param>
