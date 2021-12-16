@@ -14,6 +14,8 @@ import { ChatProvider } from './components/ChatProvider';
 import { VideoProvider } from './components/VideoProvider';
 import useConnectionOptions from './utils/useConnectionOptions/useConnectionOptions';
 import UnsupportedBrowserWarning from './components/UnsupportedBrowserWarning/UnsupportedBrowserWarning';
+import Calendar from './Calendar';
+import Chat2 from './Chat';
 
 const VideoApp = () => {
   const { error, setError } = useAppState();
@@ -38,6 +40,12 @@ ReactDOM.render(
           <Switch>
             <Route exact path="/">
               <VideoApp />
+            </Route>
+            <Route exact path="/calender">
+              <Calendar />
+            </Route>
+            <Route exact path="/chat">
+              <Chat2 />
             </Route>
             <Route path="/room/:URLRoomName">
               <VideoApp />
